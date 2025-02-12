@@ -1,0 +1,36 @@
+package com.waydj.shoppinglist.presentation
+
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.waydj.shoppinglist.data.ShopListRepositoryImpl
+import com.waydj.shoppinglist.domain.DeleteShopItemUseCase
+import com.waydj.shoppinglist.domain.EditShopItemUseCase
+import com.waydj.shoppinglist.domain.GetShopListUseCase
+import com.waydj.shoppinglist.domain.ShopItem
+
+class MainViewModel : ViewModel() {
+
+    private val repository = ShopListRepositoryImpl
+
+    private val getShopListUseCase = GetShopListUseCase(repository)
+    private val editShopItemUseCase = EditShopItemUseCase(repository)
+    private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
+
+    val shopList = MutableLiveData<List<ShopItem>>()
+
+    fun getShopList() {
+        val list = getShopListUseCase.getShopList()
+        shopList.value = list
+    }
+
+    fun changeEnableState(shopItem: ShopItem) {
+        val newShopItem = shopItem.copy(enabled = !shopItem.enabled)
+        editShopItemUseCase.editShopItem(newShopItem)
+        getShopList()
+    }
+
+    fun deleteShopItem(shopItem: ShopItem) {
+        deleteShopItemUseCase.deleteShopItem(shopItem)
+        getShopList()
+    }
+}
