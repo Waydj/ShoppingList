@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.waydj.shoppinglist.R
 
@@ -48,5 +49,43 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        setOnLongClickListener()
+        setOnClickListener()
+        setSwipeListener(rvShopList)
+    }
+
+    private fun setSwipeListener(rvShopList: RecyclerView?) {
+        val callback = object :
+            ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val view = shopListAdapter.shopList[viewHolder.adapterPosition]
+                viewModel.deleteShopItem(view)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper.attachToRecyclerView(rvShopList)
+    }
+
+    private fun setOnClickListener() {
+        shopListAdapter.onShopItemClickListener = {
+            println(it)
+        }
+    }
+
+    private fun setOnLongClickListener() {
+        shopListAdapter.onShopItemLongClickListener = {
+            viewModel.changeEnableState(it)
+        }
     }
 }
