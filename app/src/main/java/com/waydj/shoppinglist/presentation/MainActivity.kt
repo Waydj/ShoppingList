@@ -8,7 +8,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.waydj.shoppinglist.R
+import com.waydj.shoppinglist.presentation.ShopItemActivity.Companion.newIntentAddItem
+import com.waydj.shoppinglist.presentation.ShopItemActivity.Companion.newIntentEditItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +34,12 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
             shopListAdapter.submitList(it)
+        }
+
+        val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
+        buttonAddItem.setOnClickListener {
+            val intent = newIntentAddItem(this)
+            startActivity(intent)
         }
     }
 
@@ -79,7 +88,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setOnClickListener() {
         shopListAdapter.onShopItemClickListener = {
-            println(it)
+            val intent = newIntentEditItem(this, shopItemId = it.id)
+            startActivity(intent)
         }
     }
 
