@@ -1,6 +1,5 @@
 package com.waydj.shoppinglist.presentation
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.waydj.shoppinglist.data.ShopListRepositoryImpl
 import com.waydj.shoppinglist.domain.DeleteShopItemUseCase
